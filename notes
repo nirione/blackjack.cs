@@ -1,0 +1,27 @@
+NOW: BUILD A CLASS FOR CARDS AND CREATE THE OPTION TO READ THEIR STATS
+
+
+typeof(X) - to check the input type for card generation
+
+Ace = 11 points; implementation if sum of points > 11 and Ace in hand -> sum of points =-10
+
+RNG to find random cards and add them to different hand and then remove said card from deck
+
+///
+method of operation for hit:
+1 a = random number from 0 to amount of length of deck
+2 add deck[a] to selected_hand, remove deck[a]
+
+method of operation for deal:
+1 call hit for player
+2 call hit for dealer
+3 call hit for player
+4 call hit for dealer
+///
+
+
+needed method: point_couter;
+
+needed method: shuffle / gets the amount of cards left in the deck, returns random number in range 0 to n-1
+
+
