@@ -20,13 +20,13 @@ using System.Collections.Generic;
 namespace BlackJack
 
 {
-	class Program
+	class TheGame
 	{
 		public static bool init_game = true;
 
 		public static void Main (string[] args)
 		{
-		       	Console.WriteLine("Hello and welcome to Oldman\'s Casino!!");
+		    Console.WriteLine("Hello and welcome to Oldman\'s Casino!!");
 			Console.WriteLine();
 			string[] figures = {"2", "3", "4", "5", "6", "7", "8", "9", "10", "Jack", "Queen", "King", "Ace"};
 			string[] colors = {"Hearts", "Diamonds", "Clubs", "Spades"};
@@ -39,8 +39,10 @@ namespace BlackJack
 			{foreach (string fig in figures)
 					{deck.Add(new Card(fig, clr));}
 			}
-				
-			while(Program.init_game)
+			
+			Console.WriteLine("Dealing...");
+			Deal(deck, player_hand, dealer_hand);	
+			while(TheGame.init_game)
 			{ game(deck, player_hand, dealer_hand); }	
 
 
@@ -49,24 +51,36 @@ namespace BlackJack
 		public static void game (List<Card> aDeck, List<Card> aPlayer_hand, List<Card> aDealer_hand)
 		{
 			string user_choice;
-			Console.WriteLine("Pick your choice: 1 - deal | 2 - hit | 3 - exit");
+			Console.WriteLine("Pick your choice: 1 - hit | 2 - hold | e - exit");
 			Console.Write(". . . ");
 			user_choice = Console.ReadLine();
 			switch (user_choice)
 			{
 				case "1":
-					Console.WriteLine("Dealing...");
-					Deal();
-					break;
-				case "2":
-					Console.WriteLine("Hitting...");
+					Console.WriteLine(">>Hitting...");
 					if (aDeck.Count == 0)
-					{Console.WriteLine("Empty deck!"); break;}
-					else{ Hit(aDeck, aPlayer_hand); break;}
-				case "3":
-					Console.WriteLine("Exiting...");
-					Program.init_game = false;
+					{
+						Console.WriteLine("Empty deck!"); 
+						break;
+					}
+					else
+					{ 
+						Hit(aDeck, aPlayer_hand); 
+						Console.WriteLine("Points of hand: {0}", PointCounter(aPlayer_hand));						
+						break;
+					}
+					
+				case "2":
+					Console.WriteLine(">>Holding...");
+
+					Hold(aPlayer_hand);
 					break;
+					
+				case "e":
+					Console.WriteLine(">>Exiting...");
+					TheGame.init_game = false;
+					break;
+					
 				default:
 					Console.WriteLine("Oops! Wrong choice...");
 					break;
@@ -83,14 +97,36 @@ namespace BlackJack
 			Console.WriteLine("New card in hand: {0}", aHand[b].name);
 			CardsInHand(aHand);
 			Console.WriteLine();
-			Console.WriteLine("Points of hand: {0}", PointCounter(aHand));
+
 			Console.WriteLine("end of hit");
 		}
-
-		public static void Deal ()
+		
+		public static void Hold (List<Card> aHand)
 		{
-			Console.WriteLine("Deal() does nothing yet");
-		// deals 1 card to the hitting player, returns 1 more card in hitter's hand and removes it from the deck
+			CardsInHand(aHand);
+			Console.WriteLine();
+			Console.WriteLine("Points of hand: {0}", PointCounter(aHand));
+			Console.WriteLine("end of hold");
+			
+		}
+
+		public static void Deal (List<Card> aDeck, List<Card> aPlayer_hand, List<Card> aDealer_hand)
+		{
+			Console.WriteLine(">>Dealing...");
+			
+			Console.WriteLine("Dealing player...");
+			Hit(aDeck, aPlayer_hand);
+			
+			Console.WriteLine("Dealing player...");
+			Hit(aDeck, aDealer_hand);
+			
+			Console.WriteLine("Dealing player...");
+			Hit(aDeck, aPlayer_hand);
+			
+			Console.WriteLine("Dealing player...");
+			Hit(aDeck, aDealer_hand);		
+
+			Console.WriteLine("end of deal");
 		}
 
 		public static int Shuffler (List<Card> aDeck)
@@ -106,8 +142,9 @@ namespace BlackJack
 			cards = aHand.Count - 1;
 			while (cards >= 0) 
 			{points+=aHand[cards].point; cards--;}
+			HasAce();
 			return points;
-		}
+		} 
 
 		public static void CardsInHand (List<Card> aHand)
 		{
@@ -124,6 +161,12 @@ namespace BlackJack
 			for (int i = 0; i<cards; i++)
 			{Console.Write(card_names[i]+", ");}
 		}
+
+		public static void HasAce () //  List<Card> aHand make it return true if a given hand has an ace ; alternatively return points -10 <=> (HasAce ^ points>21); should be part of point counter function
+		{
+			Console.WriteLine("Has Ace?");
+		}
+
 
 	}
 
