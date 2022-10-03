@@ -54,13 +54,14 @@ namespace BlackJack{
 					else
 					{ 
 						Hit(aDeck, aPlayer_hand); 
+						HasAce(aPlayer_hand);
 						Console.WriteLine("Points of hand: {0}", PointCounter(aPlayer_hand));						
 						break;
 					}
 					
 				case "2":
 					Console.WriteLine(">>Holding...");
-
+					HasAce(aPlayer_hand);
 					Hold(aPlayer_hand);
 					break;
 					
@@ -130,7 +131,7 @@ namespace BlackJack{
 			cards = aHand.Count - 1;
 			while (cards >= 0) 
 			{points+=aHand[cards].point; cards--;}
-			HasAce();
+			//HasAce(aHand);
 			return points;
 		} 
 
@@ -151,9 +152,12 @@ namespace BlackJack{
 			{Console.Write(card_names[i]+", ");}
 		}
 
-		public static void HasAce () //  List<Card> aHand make it return true if a given hand has an ace ; alternatively return points -10 <=> (HasAce ^ points>21); should be part of point counter function
+		public static Boolean HasAce (List<Card> aHand) //should be part of point counter function
 		{
+			// takes in a given hand and returns true if an Ace exists within 
 			Console.WriteLine("Has Ace?");
+			Console.WriteLine(aHand[0].figure);
+			return true;
 		}
 
 
