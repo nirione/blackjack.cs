@@ -30,8 +30,7 @@ namespace BlackJack{
 			List<Card> dealer_hand = new List<Card>();
 
 			foreach (string clr in colors) {foreach (string fig in figures ) {deck.Add(new Card(fig, clr)); } }
-			
-			Console.WriteLine("Dealing...");
+
 			Deal(deck, player_hand, dealer_hand);	
 			while(TheGame.init_game)
 			{ game(deck, player_hand, dealer_hand); } }	
@@ -53,15 +52,15 @@ namespace BlackJack{
 					}
 					else
 					{ 
-						Hit(aDeck, aPlayer_hand); 
-						HasAce(aPlayer_hand);
+						Hit(aDeck, aPlayer_hand); 				
+						CardsInHand(aPlayer_hand); Console.WriteLine();
 						Console.WriteLine("Points of hand: {0}", PointCounter(aPlayer_hand));						
 						break;
 					}
 					
 				case "2":
-					Console.WriteLine(">>Holding...");
-					HasAce(aPlayer_hand);
+					Console.WriteLine(">>Holding...");					
+					CardsInHand(aPlayer_hand); Console.WriteLine();
 					Hold(aPlayer_hand);
 					break;
 					
@@ -83,11 +82,6 @@ namespace BlackJack{
 
 			aHand.Add(aDeck[a]);
 			aDeck.Remove(aDeck[a]);
-			Console.WriteLine("New card in hand: {0}", aHand[b].name);
-			CardsInHand(aHand);
-			Console.WriteLine();
-
-			Console.WriteLine("end of hit");
 		}
 		
 		public static void Hold (List<Card> aHand) {
@@ -95,27 +89,16 @@ namespace BlackJack{
 			CardsInHand(aHand);
 			Console.WriteLine();
 			Console.WriteLine("Points of hand: {0}", PointCounter(aHand));
-			Console.WriteLine("end of hold");
-			
 		}
 
 		public static void Deal (List<Card> aDeck, List<Card> aPlayer_hand, List<Card> aDealer_hand) {
 
 			Console.WriteLine(">>Dealing...");
-			
-			Console.WriteLine("Dealing player...");
-			Hit(aDeck, aPlayer_hand);
-			
-			Console.WriteLine("Dealing player...");
-			Hit(aDeck, aDealer_hand);
-			
-			Console.WriteLine("Dealing player...");
-			Hit(aDeck, aPlayer_hand);
-			
-			Console.WriteLine("Dealing player...");
-			Hit(aDeck, aDealer_hand);		
 
-			Console.WriteLine("end of deal");
+			Hit(aDeck, aPlayer_hand);
+			Hit(aDeck, aDealer_hand);
+			Hit(aDeck, aPlayer_hand);
+			Hit(aDeck, aDealer_hand);
 		}
 
 		public static int Shuffler (List<Card> aDeck) {
@@ -125,13 +108,19 @@ namespace BlackJack{
 		}
 
 		public static int PointCounter (List<Card> aHand) {
-
+			
+			Console.WriteLine(">>Counting...");
+			
 			int points, cards;
 			points = 0;
 			cards = aHand.Count - 1;
+			
 			while (cards >= 0) 
 			{points+=aHand[cards].point; cards--;}
-			//HasAce(aHand);
+
+			if ( (HasAce(aHand) == true) && (points > 20) )
+			{points -= 10;}
+		
 			return points;
 		} 
 
@@ -145,22 +134,27 @@ namespace BlackJack{
 				{ card_names.Add(aHand[i].name);}
 			}
 
-			else{ Console.WriteLine("empty hand"); }
-		
-			Console.Write("Cards in hand: ");	
+			Console.Write("Cards in hand: ");	// to be removed??
 			for (int i = 0; i<cards; i++)
 			{Console.Write(card_names[i]+", ");}
 		}
 
-		public static Boolean HasAce (List<Card> aHand) //should be part of point counter function
-		{
-			// takes in a given hand and returns true if an Ace exists within 
-			Console.WriteLine("Has Ace?");
-			Console.WriteLine(aHand[0].figure);
-			return true;
+		public static Boolean HasAce (List<Card> aHand) {	
+			
+			Boolean hasace = false;
+			int cards = aHand.Count;
+			
+			for (int i = 0; i < cards; i++)	{ 					
+				if (aHand[i].figure == "Ace" )
+					{hasace = true; break;}
+			}
+
+			return hasace;
 		}
-
-
+		
+		public static int GameState (List<Card> aHand) { //checks points of the player's hand
+			return 1;
+		}	
 	}
 
 	class Card {
@@ -177,8 +171,5 @@ namespace BlackJack{
 			else { point = 10;}
 			name = aFigure + " of " + aColor;
 		}
-
 	}
-
 }
-
