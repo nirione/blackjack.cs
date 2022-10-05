@@ -1,18 +1,17 @@
-Ace = 11 points; implementation if sum of points > 11 and Ace in hand -> sum of points =-10
+2 while loops: one for session, one for game
 
-///
-method of operation for hit:
-1 a = random number from 0 to amount of length of deck
-2 add deck[a] to selected_hand, remove deck[a]
+while session
+{ while game
+  {
+  }
+}
 
-method of operation for deal:
-1 call hit for player
-2 call hit for dealer
-3 call hit for player
-4 call hit for dealer
-///
+switch statement in session: 1 game, 2 HoF, 3 exit
+switch statement in game: 1 hit, 2 hold, 3 check, 4 quit
 
+switch in game constantly repeats the game (resetting the deck and hands with each loop)
 
+read up on rules in blackjack
 
 
 
