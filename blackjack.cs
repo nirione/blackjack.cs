@@ -18,6 +18,10 @@ namespace BlackJack{
 
 		public static bool init_session = true;
 		public static bool init_game = true;
+		public static float wins = 0; 
+		public static float loses = 0;
+
+
 
 		public static void Main (string[] args){
 
@@ -25,12 +29,16 @@ namespace BlackJack{
 			Console.WriteLine();
 			string[] figures = {"2", "3", "4", "5", "6", "7", "8", "9", "10", "Jack", "Queen", "King", "Ace"};
 			string[] colors = {"Hearts", "Diamonds", "Clubs", "Spades"};
-
-
+			
+			
 			while(TheGame.init_session)
-			{	
-				Console.WriteLine(" __________ ");
+			{			
+				float ratio = 0;
+				if (loses != 0) {ratio = wins / (wins+loses);}
+				
+				Console.WriteLine("__________");
 				Console.WriteLine("New game!!");
+				Console.WriteLine("Current run: {0} wins to {1} loses ({2:F2} W/L ratio)", wins, loses, ratio);
 				List<Card> deck = new List<Card>();
 				List<Card> player_hand = new List<Card>();
 				List<Card> dealer_hand = new List<Card>();
@@ -43,66 +51,84 @@ namespace BlackJack{
 
 				TheGame.init_game = true;
 				while(TheGame.init_game) 
-				{game(deck, player_hand, dealer_hand);}
+					{game(deck, player_hand, dealer_hand);}
 		       	}	
 		}
+		
 		public static void game (List<Card> aDeck, List<Card> aPlayer_hand, List<Card> aDealer_hand){
 
 			string user_choice;
-			Console.WriteLine("Pick your choice: 1 - hit | 2 - hold | e - exit | end - quit game");
-			Console.Write(". . . ");
-			user_choice = Console.ReadLine();
-			switch (user_choice) {
-
-				case "1":
-					Console.WriteLine("  >>Hitting...");
-					Hit(aDeck, aPlayer_hand); 				
-					CardsInHand(aPlayer_hand); Console.WriteLine();
-					Console.WriteLine("Points of hand: {0}", PointCounter(aPlayer_hand));						
-
-					if ( PointCounter(aPlayer_hand) > 21)
-					{ 	
-						Console.WriteLine("You lose!!");
-						init_game = false;
-						break;
-					}
-					else if (PointCounter(aPlayer_hand) == 21)
-					{
-						Console.WriteLine("You win!!");
-						init_game = false;
-						break;
-					}
-					else
-					{	
-						Console.WriteLine("Points of hand: {0}", PointCounter(aPlayer_hand));						
-						break;
-					}
-					
-				case "2":
-					Console.WriteLine("  >>Holding...");					
-					Hold(aPlayer_hand);
-					break;
-
-				case "3": 
-					Console.WriteLine(" >>Resetting...");
-					break;
-					
-				case "e":
-					Console.WriteLine("  >>Exiting...");
-					TheGame.init_game = false;
-					break;
+						
+			if ( PointCounter(aPlayer_hand) > 21){
 				
-				case "end":
-					Console.WriteLine("Quitting game...");
-					TheGame.init_game = false;
-					TheGame.init_session = false;
-					break;	
-					
-				default:
-					Console.WriteLine("Oops! Wrong choice...");
-					break;
+				Console.WriteLine("You lose!!");
+				loses++;
+				init_game = false;
 			}
-		}	
+			else if (PointCounter(aPlayer_hand) == 21)
+			{
+				Console.WriteLine("You win!!");
+				wins++;
+				init_game = false;				
+			}
+
+			
+			Console.WriteLine("Dealer points: {0}", PointCounter(aDealer_hand));
+			
+			if (init_game == true) {
+				Console.WriteLine("Pick your choice: 1 - hit | 2 - check | e - exit | end - quit game");
+				Console.Write(". . . ");
+				user_choice = Console.ReadLine();		
+			
+				switch (user_choice) {
+
+					case "1":
+						Console.WriteLine("  >>Hitting...");
+						Hit(aDeck, aPlayer_hand); 				
+						CardsInHand(aPlayer_hand); Console.WriteLine();
+						Console.WriteLine("Points of hand: {0}", PointCounter(aPlayer_hand));	
+						break;
+						
+					case "2":
+						Console.WriteLine("  >>Checking...");					
+						if (PointCounter(aPlayer_hand) > PointCounter(aDealer_hand)) {
+							Console.WriteLine("You win!!");
+							wins++;
+							init_game = false;	
+						}
+						else if (PointCounter(aPlayer_hand) < PointCounter(aDealer_hand)) {
+							Console.WriteLine("You lose!!");
+							loses++;
+							init_game = false;	
+						}
+						else {
+							Console.WriteLine("Issa draw!");
+							init_game = false;
+						}
+						break;
+
+					case "3": 
+						Console.WriteLine(" >>Resetting...");
+						break;
+						
+					case "e":
+						Console.WriteLine("  >>Exiting...");
+						TheGame.init_game = false;
+						break;
+					
+					case "end":
+						Console.WriteLine("Quitting game...");
+						TheGame.init_game = false;
+						TheGame.init_session = false;
+						break;	
+						
+					default:
+						Console.WriteLine("Oops! Wrong choice...");
+						break;
+				}
+			}
+	}
+		
 
 		public static void Hit (List<Card> aDeck, List<Card> aHand) {
 
@@ -113,12 +139,6 @@ namespace BlackJack{
 			aDeck.Remove(aDeck[a]);
 		}
 		
-		public static void Hold (List<Card> aHand) {
-
-			CardsInHand(aHand);
-			Console.WriteLine();
-			Console.WriteLine("Points of hand: {0}", PointCounter(aHand));
-		}
 
 		public static void Deal (List<Card> aDeck, List<Card> aPlayer_hand, List<Card> aDealer_hand) {
 
@@ -137,9 +157,7 @@ namespace BlackJack{
 		}
 
 		public static int PointCounter (List<Card> aHand) {
-			
-			Console.WriteLine("  >>Counting...");
-			
+		
 			int points, cards;
 			points = 0;
 			cards = aHand.Count - 1;
