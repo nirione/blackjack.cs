@@ -36,65 +36,73 @@ namespace BlackJack{
 				float ratio = wins / (wins+loses);
 				
 				Console.WriteLine("   __________");
-				Console.WriteLine("   New game!!");
-				Console.WriteLine(" >>Current run: {0} wins to {1} loses ({2:F2} W/L ratio)", wins, loses, ratio);
+				Console.Write("   New game!! ");
+				if ((wins == 0) && (loses == 0))
+				{ Console.WriteLine("Fresh start... Lets see what luck brings you today!!"); }
+				else
+				{ Console.WriteLine(" >>Current run: {0} wins to {1} loses ({2:F2} W/L ratio)", wins, loses, ratio); }
+				
 				List<Card> deck = new List<Card>();
 				List<Card> player_hand = new List<Card>();
 				List<Card> dealer_hand = new List<Card>();
 
 				deck = MakeDeck(figures, colors);
-
+				
+				Console.WriteLine("   __________");
 				Deal(deck, player_hand, dealer_hand);	
 				CardsInHand(player_hand); Console.WriteLine();
 				Console.WriteLine("Points: {0}", PointCounter(player_hand));						
-
+				Console.WriteLine("   __________");
+				
 				TheGame.init_game = true;
+				
 				while(TheGame.init_game) 
 					{game(deck, player_hand, dealer_hand);}
-		       	}	
+				if (TheGame.init_session == true)
+				{
+					Console.Write("Press any key to proceed...");
+					Console.ReadKey();
+					Console.WriteLine();
+				}
+		    }	
 		}
 		
-		public static void game (List<Card> aDeck, List<Card> aPlayer_hand, List<Card> aDealer_hand){
+		public static void game (List<Card> aDeck, List<Card> aPlayer_hand, List<Card> aDealer_hand)
+		{
 
 			string user_choice;
 						
-			if ( PointCounter(aPlayer_hand) > 21){
-				
-				Console.WriteLine("Dealer was dealt:");
-				CardsInHand(aDealer_hand); Console.WriteLine();
-				Console.WriteLine("You scored: {0}", PointCounter(aPlayer_hand));
-				Console.WriteLine("Dealer scored: {0}", PointCounter(aDealer_hand));
-				Console.WriteLine("You lose!!");
+			if ( PointCounter(aPlayer_hand) > 21)
+			{
+				Console.WriteLine("You scored {0} and thus you lose...", PointCounter(aPlayer_hand));
 				loses++;
 				init_game = false;
 			}
 			else if (PointCounter(aPlayer_hand) == 21)
 			{			
-				Console.WriteLine("Dealer was dealt:");
-				CardsInHand(aDealer_hand); Console.WriteLine();
-				Console.WriteLine("You scored: {0}", PointCounter(aPlayer_hand));
-				Console.WriteLine("Dealer scored: {0}", PointCounter(aDealer_hand));
-				Console.WriteLine("You win!!");
+
+				Console.WriteLine("You scored {0} and thus you win!!", PointCounter(aPlayer_hand));
+
 				wins++;
 				init_game = false;				
 			}
 			
 			if (init_game == true) {
-				Console.WriteLine("Pick your choice: 1 - hit | 2 - check | e - exit | end - quit game");
+				Console.WriteLine("Pick your choice: 1 - hit | 2 - check | 3 - deal | e - quit game");
 				Console.Write(". . . ");
 				user_choice = Console.ReadLine();		
 			
 				switch (user_choice) {
 
 					case "1":
-						Console.WriteLine("  >>Hitting...");
+						Console.Write("  >>Hitting...");
 						Hit(aDeck, aPlayer_hand); 				
 						CardsInHand(aPlayer_hand); Console.WriteLine();
 						Console.WriteLine("Points of hand: {0}", PointCounter(aPlayer_hand));	
 						break;
 						
 					case "2":
-						Console.WriteLine("  >>Checking...");					
+						Console.Write("  >>Checking...");					
 						Console.WriteLine("Dealer was dealt:");
 						CardsInHand(aDealer_hand); Console.WriteLine();
 						Console.WriteLine("You scored: {0}", PointCounter(aPlayer_hand));
@@ -115,12 +123,12 @@ namespace BlackJack{
 						}
 						break;
 
-					case "e":
-						Console.WriteLine("  >>Exiting...");
+					case "3":
+						Console.Write("  >>New deal...");
 						TheGame.init_game = false;
 						break;
 					
-					case "end":
+					case "e":
 						Console.WriteLine("Quitting game...");
 						TheGame.init_game = false;
 						TheGame.init_session = false;
@@ -131,7 +139,7 @@ namespace BlackJack{
 						break;
 				}
 			}
-	}
+		}
 
 		public static void Hit (List<Card> aDeck, List<Card> aHand) {
 			int a = Shuffler(aDeck);
@@ -142,7 +150,7 @@ namespace BlackJack{
 		
 
 		public static void Deal (List<Card> aDeck, List<Card> aPlayer_hand, List<Card> aDealer_hand) {
-			Console.WriteLine("  >>Dealing...");
+			Console.Write("  >>Dealing... ");
 			Hit(aDeck, aPlayer_hand);
 			Hit(aDeck, aDealer_hand);
 			Hit(aDeck, aPlayer_hand);
@@ -177,10 +185,9 @@ namespace BlackJack{
 				{ card_names.Add(aHand[i].name);}
 			}
 
-			Console.Write("Cards in hand: ");
 			for (int i = 0; i<cards; i++)
 			{Console.Write(card_names[i]+", ");}
-			Console.WriteLine("Amount of cards: {0}", aHand.Count);
+			Console.WriteLine();
 		}
 
 		public static Boolean HasAce (List<Card> aHand) {	
