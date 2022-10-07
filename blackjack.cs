@@ -42,11 +42,14 @@ namespace BlackJack{
 				else
 				{ Console.WriteLine(" >>Current run: {0} wins to {1} loses ({2:F2} W/L ratio)", wins, loses, ratio); }
 				
+				
 				List<Card> deck = new List<Card>();
 				List<Card> player_hand = new List<Card>();
 				List<Card> dealer_hand = new List<Card>();
 
+				Console.WriteLine("Make deck");
 				deck = MakeDeck(figures, colors);
+				Console.WriteLine(deck);
 				
 				Console.WriteLine("   __________");
 				Deal(deck, player_hand, dealer_hand);	
@@ -143,6 +146,7 @@ namespace BlackJack{
 
 		public static void Hit (List<Card> aDeck, List<Card> aHand) {
 			int a = Shuffler(aDeck);
+			Console.WriteLine("The random number is {0}: ", a);
 			int b = aHand.Count;
 			aHand.Add(aDeck[a]);
 			aDeck.Remove(aDeck[a]);
@@ -157,8 +161,11 @@ namespace BlackJack{
 			Hit(aDeck, aDealer_hand);
 		}
 
-		public static int Shuffler (List<Card> aDeck) {
-			Random getrand = new Random();
+		public static int Shuffler (List<Card> aDeck) { // to fix up -> function does not return a random number within the given range
+			Random getrand = new Random();			
+			Console.WriteLine("Random 1: {0}", getrand);
+			getrand.Next(0, aDeck.Count);
+			Console.WriteLine("Random 2: {0}", getrand);
 			return getrand.Next(0, aDeck.Count);
 		}
 
@@ -203,6 +210,7 @@ namespace BlackJack{
 		public static List<Card> MakeDeck (string[] aFigures, string[] aColors) {
 			List<Card> deck = new List<Card>();
 			foreach (string clr in aColors) {foreach (string fig in aFigures ) {deck.Add(new Card(fig, clr)); } }
+			Console.WriteLine("MakeDeck made deck");
 			return deck;
 		}	
 	}
