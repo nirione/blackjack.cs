@@ -19,10 +19,9 @@ namespace BlackJack{
 		public static bool init_session = true;
 		public static bool init_game = true;
 		public static float wins = 0; 
-		public static float loses = 0;
-
-
-
+		public static float loses = 0;		
+		private static readonly Random getrandom = new Random();
+		
 		public static void Main (string[] args){
 
 		    Console.WriteLine("Hello and welcome to Oldman\'s Casino!!");
@@ -41,15 +40,12 @@ namespace BlackJack{
 				{ Console.WriteLine("Fresh start... Lets see what luck brings you today!!"); }
 				else
 				{ Console.WriteLine(" >>Current run: {0} wins to {1} loses ({2:F2} W/L ratio)", wins, loses, ratio); }
-				
-				
+								
 				List<Card> deck = new List<Card>();
 				List<Card> player_hand = new List<Card>();
 				List<Card> dealer_hand = new List<Card>();
-
-				Console.WriteLine("Make deck");
+				
 				deck = MakeDeck(figures, colors);
-				Console.WriteLine(deck);
 				
 				Console.WriteLine("   __________");
 				Deal(deck, player_hand, dealer_hand);	
@@ -146,7 +142,6 @@ namespace BlackJack{
 
 		public static void Hit (List<Card> aDeck, List<Card> aHand) {
 			int a = Shuffler(aDeck);
-			Console.WriteLine("The random number is {0}: ", a);
 			int b = aHand.Count;
 			aHand.Add(aDeck[a]);
 			aDeck.Remove(aDeck[a]);
@@ -154,19 +149,19 @@ namespace BlackJack{
 		
 
 		public static void Deal (List<Card> aDeck, List<Card> aPlayer_hand, List<Card> aDealer_hand) {
-			Console.Write("  >>Dealing... ");
+			Console.Write("  Fresh deal: ");
 			Hit(aDeck, aPlayer_hand);
 			Hit(aDeck, aDealer_hand);
 			Hit(aDeck, aPlayer_hand);
 			Hit(aDeck, aDealer_hand);
 		}
 
-		public static int Shuffler (List<Card> aDeck) { // to fix up -> function does not return a random number within the given range
-			Random getrand = new Random();			
-			Console.WriteLine("Random 1: {0}", getrand);
-			getrand.Next(0, aDeck.Count);
-			Console.WriteLine("Random 2: {0}", getrand);
-			return getrand.Next(0, aDeck.Count);
+		public static int Shuffler (List<Card> aDeck)
+		{
+			lock(getrandom) // synchronize
+			{
+				return getrandom.Next(0, aDeck.Count);
+			}
 		}
 
 		public static int PointCounter (List<Card> aHand) {
@@ -210,7 +205,6 @@ namespace BlackJack{
 		public static List<Card> MakeDeck (string[] aFigures, string[] aColors) {
 			List<Card> deck = new List<Card>();
 			foreach (string clr in aColors) {foreach (string fig in aFigures ) {deck.Add(new Card(fig, clr)); } }
-			Console.WriteLine("MakeDeck made deck");
 			return deck;
 		}	
 	}
