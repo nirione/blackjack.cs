@@ -73,6 +73,7 @@ namespace BlackJack{
 						
 			if ( PointCounter(aPlayer_hand) > 21)
 			{
+				CardsInHand(aPlayer_hand);
 				Console.WriteLine("You scored {0} and thus you lose...", PointCounter(aPlayer_hand));
 				loses++;
 				init_game = false;
@@ -80,14 +81,14 @@ namespace BlackJack{
 			else if (PointCounter(aPlayer_hand) == 21)
 			{			
 
+				CardsInHand(aPlayer_hand);
 				Console.WriteLine("You scored {0} and thus you win!!", PointCounter(aPlayer_hand));
-
 				wins++;
 				init_game = false;				
 			}
 			
 			if (init_game == true) {
-				Console.WriteLine("Pick your choice: 1 - hit | 2 - check | 3 - deal | e - quit game");
+				Console.WriteLine("1 - hit | 2 - check | 3 - deal | e - quit game");
 				Console.Write(". . . ");
 				user_choice = Console.ReadLine();		
 			
@@ -97,13 +98,16 @@ namespace BlackJack{
 						Console.Write("  >>Hitting...");
 						Hit(aDeck, aPlayer_hand); 				
 						CardsInHand(aPlayer_hand); Console.WriteLine();
-						Console.WriteLine("Points of hand: {0}", PointCounter(aPlayer_hand));	
+						Console.WriteLine("Current points: {0}", PointCounter(aPlayer_hand));	
 						break;
 						
 					case "2":
-						Console.Write("  >>Checking...");					
+						Console.Write("  >>Checking...");
+						Console.WriteLine();
+						Console.WriteLine("You were dealt:");
+						CardsInHand(aPlayer_hand);
 						Console.WriteLine("Dealer was dealt:");
-						CardsInHand(aDealer_hand); Console.WriteLine();
+						CardsInHand(aDealer_hand);
 						Console.WriteLine("You scored: {0}", PointCounter(aPlayer_hand));
 						Console.WriteLine("Dealer scored: {0}", PointCounter(aDealer_hand));
 						if (PointCounter(aPlayer_hand) > PointCounter(aDealer_hand)) {
