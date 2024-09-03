@@ -3,7 +3,6 @@ using System.Collections.Generic;
 	
 		// blackjack card game (simplified) written by Jack Oldman in 2022 as a learning opportunity for coding in C#
 		// game can possibly be improved by creating another class for Hand, which would consist of points, separate cards etc.
-		// Copyright by jackoldman, version 1.0 released 9.10.2022
 		
 namespace BlackJack {
 
